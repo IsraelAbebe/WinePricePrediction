@@ -1,5 +1,7 @@
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import re
+from sklearn.decomposition import PCA, TruncatedSVD
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 analyser = SentimentIntensityAnalyzer()
@@ -36,3 +38,12 @@ def get_points(name):
         return 2
     else:
         return 1
+
+def extract_text(column):
+    vec = TfidfVectorizer()
+    vec.fit(column)
+    X = vec.transform(column)
+    pca = TruncatedSVD(1)
+    pca.fit(X.T)
+    
+    return pca.components_.T
